@@ -1,23 +1,4 @@
 ﻿/*
-  In particolare voi volete tenere traccia dei:
-nomi
-cognomi
-eta
-numero di partecipanti attuali nel corso dei vostri alunni.
-La classe all'inizio sarà vuota, ma sapete che avrete al massimo 10 sedie, ossia 10 posti nell'aula, pertanto come
-ragionato questa mattina pensate bene all'inizializzazione delle vostre variabili globali.
-
-stampaCognomeAlunni: vi permette di stampare tutti i cognomi dei vostri alunni
-stampaNomiAlunni: vi permette di stampare i nomi dei vostri alunni
-stampaEtaAlunni: vi permette di stampare l'età dei vostri alunni (riciclate stampaArray() 
-:faccia_leggermente_sorridente: ).
-aggiungiAlunno: che vi permette di aggiungere un alunno alla vostra classe (nome, cognome ed età);
-rimuoviUltimoAlunno: che vi "toglie" l'ultimo alunno della classe, ossia "sbianca" gli array nell'ultimo posto 
-occupato.
-Definite queste funzioni di base, usatele per compilare la vostra ipotetica classe di alunni, provando ad aggiungere 
-e rimuovere alunni al bisogno e stampando di volta in volta i risultati delle vostre operazioni sulla classe. 
-Chiedete all'utente come fatto questa mattina per la rimessa auto, se vuole aggiungere o rimuovere un alunno dalla
-classe e mostrategli ciò che succede.
 A questo punto volete avere delle statistiche sulla vostra classe, pertanto vi si chiede di fornire tramite 
 funzioni le seguenti cose:
 una funzione calcolaEtaMediaClasse che vi restituisca l'età media della classe.
@@ -28,45 +9,141 @@ che una volta scritto a console "statistiche" vi stampi i risultati delle funzio
  */
 
 
-int postiMax = 10;
+
+
+int postiMax = 2;
 int numeroPartecipanti = 0;
-string[] cognomi = new string[numeroPartecipanti];
-int[] eta;
-string[] nomi = new string[numeroPartecipanti];
-
+string[] arrayCognomi = new string[postiMax];
+int[] arrayEta = new int[postiMax];
+string[] arrayNomi = new string[postiMax];
+bool input;
 // -------------------- MAIN ------------------------
-Console.WriteLine("Inserisci il Cognome dell'alunno");
-cognomi[numeroPartecipanti] = Console.ReadLine();
-stampaArray(cognomi);
-stampaArray(nomi);
 
-//---------------- FUNZIONI -------------------------
-void stampaArray (string[] array)
+Console.WriteLine("Il numero di posti disponibili in classe è " + postiMax);
+Console.WriteLine("Nella tua classe sono presenti i seguenti alunni:");
+
+
+while (true)
 {
-    Console.Write("[");
-    for (int i = 0; i < array.Length; i++)
+    Console.Write("Vuoi aggiungere o rimuovere un Alunno [aggiungi/rimuovi]? ");
+    string risposta = Console.ReadLine();
+
+  switch (risposta)
     {
-        Console.Write(array[i]);
-        if (i < array.Length - 1)
-        {
-            Console.Write(" ,");
-        }
+        case "aggiungi":
+            Console.WriteLine("Scrivi il nome dell'alunno: ");
+            string nomiAlunni = Console.ReadLine();
+            input = true;   
+
+            Console.WriteLine("Scrivi il cognome dell'alunno: ");
+             string cognomiAlunno = Console.ReadLine();
+            
+
+            Console.WriteLine("Scrivi l'età dell'alunno: ");
+            int etaAlunno = int.Parse(Console.ReadLine());
+           
+            aggiungilunno(cognomiAlunno, nomiAlunni, etaAlunno);
+            break;
+        case "rimuovi":
+            decrementaAlunno();
+            input = true;
+            break;
+        case "no":
+            input = false;
+            break;
+        
     }
+    stampaArray(arrayNomi);
+    stampaArray(arrayCognomi);
+    stampaArrayEta(arrayEta);
+    int media =calcolaEtaMediaClass(arrayEta);
+    Console.WriteLine("la media della classe è:" +media);
+
+    int alunnoGiovane = EtaPiuGiovane(arrayEta);
+    Console.WriteLine("il più piccolo è:" +alunnoGiovane);
 }
 
-void aggiungilunno(string cognomeAlunno, string nomeAlunno, int etaAlunno )
+    //---------------- FUNZIONI -------------------------
+    void stampaArray(string[] array)
+    {
+        Console.Write("[");
+        for (int i = 0; i < array.Length; i++)
+        {
+            Console.Write(array[i]);
+            if (i < array.Length - 1)
+            {
+                Console.Write(" ,");
+            }
+        }
+    Console.Write("]");
+}
+    void stampaArrayEta(int[] array)
+    {
+        Console.Write("[");
+        for (int i = 0; i < array.Length; i++)
+        {
+            Console.Write(array[i]);
+            if (i < array.Length - 1)
+            {
+                Console.Write(" ,");
+            }
+        }
+        Console.Write("]");
+}
+    void aggiungilunno(string cognomeAlunno, string nomeAlunno, int etaAlunno)
+    {
+        if (numeroPartecipanti < postiMax)
+        {
+
+            arrayCognomi[numeroPartecipanti] = cognomeAlunno;
+            arrayNomi[numeroPartecipanti] = nomeAlunno; 
+            arrayEta[numeroPartecipanti] = etaAlunno;
+            numeroPartecipanti++;
+        }
+        else
+        {
+            Console.WriteLine("Mi dispiace la classe è al completo");
+        }
+    }
+
+    void decrementaAlunno()
+    {
+        if (numeroPartecipanti > 0)
+        {
+            numeroPartecipanti--;
+            arrayCognomi[numeroPartecipanti] = "";
+            arrayNomi[numeroPartecipanti] = "";
+            arrayEta[numeroPartecipanti] = 0;
+        }
+        else
+        {
+            Console.WriteLine("La classe è vuota");
+        }
+    }
+
+int calcolaEtaMediaClass (int[] array)
 {
-    if (numeroPartecipanti < postiMax)
+    int somma = 0;
+    int media = 0;
+    for (int i = 0; i < array.Length; i++)
+    {
+        
+            somma += array[i];
+        
+    }
+    media = somma/arrayEta.Length;
+    return media;
+
+}
+
+int EtaPiuGiovane (int[] array)
+{
+    int minore = 0;
+    for (int i = 0; i < array.Length; i++)
     {
 
-        cognomi[numeroPartecipanti] = cognomeAlunno;
-        nomi[numeroPartecipanti] = nomeAlunno;
-        eta[numeroPartecipanti] = etaAlunno;
-        numeroPartecipanti++;
+        minore = Math.Min(minore, array[i]);
 
     }
-    else
-    {
-        Console.WriteLine("Mi dispiace la classe è al completo");
-    }
+    return minore;
 }
